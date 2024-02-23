@@ -1,6 +1,103 @@
 .App {
+  min-height: 100vh;
   text-align: center;
+  background-color: #282c34;
+  color: white;
+  font-size: calc(10px + 2vmin);
 }
+
+.rotate {
+  transform: rotate(45deg) scale(1.5);
+}
+
+.outside-elevator {
+  margin-top: 120px;
+  font-size: x-large;
+  .input-num {
+    width: 50px;
+  }
+  .one-button {
+    margin-top: 20px;
+    .up-button {
+      width: 50px;
+      height: 50px;
+      border: none;
+    }
+    .down-button {
+      width: 50px;
+      height: 50px;
+      border: none;
+    }
+    .up-button:hover, .down-button:hover {
+      background-color: #8c8c8c !important;
+      color: black;
+    }
+  }
+}
+
+.one-line {
+  margin-top: 30px;
+}
+
+.elevator {
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-size: x-large;
+    .current-floor {
+      margin-left: 10px;
+      margin-right: 80px;
+    }
+  }
+  .left-button {
+    margin-bottom: 6px;
+    float: left;
+    width: 50px;
+    height: 40px;
+    border: none;
+  }
+  .left-button:hover {
+    margin-bottom: 6px;
+    float: left;
+    width: 50px;
+    height: 40px;
+    border: none;
+    background-color: #7fb9af !important;;
+  }
+  .left-button-hover {
+    margin-bottom: 6px;
+    float: left;
+    width: 50px;
+    height: 40px;
+    background-color: #5b8c00;
+    border: none;
+  }
+  .right-button {
+    margin-bottom: 6px;
+    width: 50px;
+    height: 40px;
+    border: none;
+  }
+  .right-button:hover {
+    margin-bottom: 6px;
+    width: 50px;
+    height: 40px;
+    border: none;
+    background-color: #7fb9af !important;
+  }
+  .right-button-hover {
+    margin-bottom: 6px;
+    width: 50px;
+    height: 40px;
+    background-color: #5b8c00;
+    border: none;
+  }
+}
+
 
 .App-logo {
   height: 40vmin;
