@@ -1,7 +1,7 @@
 .App {
   min-height: 100vh;
   text-align: center;
-  background-color: #949eb2;
+  background-color: #08979c;
   color: white;
   font-size: calc(10px + 2vmin);
 }
@@ -44,8 +44,7 @@
 
 .one-line {
   margin-top: 30px;
-  text-align: left;
-  display: list-item;
+  text-align: center;
 }
 
 .elevator {

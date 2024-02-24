@@ -197,9 +197,9 @@ function App() {
             setPeopleCount(data.persons)
             setPersonData(data.person_data)
             setFloorData(data.building_floor_data)
+            // @ts-ignore
+            intervalHandle.current = setInterval(getElevatorInfoFunc, 10000);
         })
-        // @ts-ignore
-        intervalHandle.current = setInterval(getElevatorInfoFunc, 8000);
     }
 
     const stopElevatorFunc = () => {
@@ -232,14 +232,6 @@ function App() {
     return (
         <div className="App">
             <Row>
-                <Col span={6} offset={1} className="flow-col">
-                    <div className="outside-elevator">
-                        <div style={{marginBottom: '20px'}}>*Floor Data*</div>
-                        <div>
-                            <Table dataSource={floorData} columns={floorDataCol} rowClassName={floorColor}/>
-                        </div>
-                    </div>
-                </Col>
                 <Col span={4} offset={1}>
                     <div className="outside-elevator">
                         <div>*Outside the elevator*</div>
@@ -264,6 +256,15 @@ function App() {
                         <div className="one-button">
                             <Button onClick={() => callElevatorFromOutside(0)} className='down-button'
                                     style={{backgroundColor: '#bfbfbf', marginTop: '8px'}}><ArrowDownOutlined/></Button>
+                        </div>
+                    </div>
+                </Col>
+
+                <Col span={6} offset={1} className="flow-col">
+                    <div className="outside-elevator">
+                        <div style={{marginBottom: '20px'}}>*Floor Data*</div>
+                        <div>
+                            <Table dataSource={floorData} columns={floorDataCol} rowClassName={floorColor}/>
                         </div>
                     </div>
                 </Col>
@@ -300,9 +301,6 @@ function App() {
                         <div style={{marginBottom: '20px'}}>*Elevator Status*</div>
                         <div className="one-line">
                             <span>People Inside :&nbsp;&nbsp;{peopleCount}</span>
-                        </div>
-                        <div className="one-line">
-                            <span>Data of people</span>
                         </div>
                         <div style={{marginTop: '30px'}}>
                             <Table dataSource={personData} columns={floorDataCol} rowClassName={personColor}/>
