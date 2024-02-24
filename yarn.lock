@@ -134,7 +134,7 @@
     "@jridgewell/trace-mapping" "^0.3.17"
     jsesc "^2.5.1"
 
-"@babel/helper-annotate-as-pure@^7.22.5":
+"@babel/helper-annotate-as-pure@^7.18.6", "@babel/helper-annotate-as-pure@^7.22.5":
   version "7.22.5"
   resolved "https://registry.yarnpkg.com/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.22.5.tgz#e7f06737b197d580a01edf75d97e2c8be99d3882"
   integrity sha512-LvBTxu8bQSQkcyKOU+a1btnNFQ1dMAd0R6PyW3arXes06F6QLWLIrd681bxRPIXlrMGR3XYnW9JyML7dP3qgxg==
@@ -159,7 +159,7 @@
     lru-cache "^5.1.1"
     semver "^6.3.1"
 
-"@babel/helper-create-class-features-plugin@^7.18.6", "@babel/helper-create-class-features-plugin@^7.22.15", "@babel/helper-create-class-features-plugin@^7.23.6", "@babel/helper-create-class-features-plugin@^7.23.9":
+"@babel/helper-create-class-features-plugin@^7.18.6", "@babel/helper-create-class-features-plugin@^7.21.0", "@babel/helper-create-class-features-plugin@^7.22.15", "@babel/helper-create-class-features-plugin@^7.23.6", "@babel/helper-create-class-features-plugin@^7.23.9":
   version "7.23.10"
   resolved "https://registry.yarnpkg.com/@babel/helper-create-class-features-plugin/-/helper-create-class-features-plugin-7.23.10.tgz#25d55fafbaea31fd0e723820bb6cc3df72edf7ea"
   integrity sha512-2XpP2XhkXzgxecPNEEK8Vz8Asj9aRxt08oKOqtiZoqV2UGZ5T+EkyP9sXQ9nwMxBIG34a7jmasVqoMop7VdPUw==
@@ -415,6 +415,16 @@
   version "7.21.0-placeholder-for-preset-env.2"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-private-property-in-object/-/plugin-proposal-private-property-in-object-7.21.0-placeholder-for-preset-env.2.tgz#7844f9289546efa9febac2de4cfe358a050bd703"
   integrity sha512-SOSkfJDddaM7mak6cPEpswyTRnuRltl429hMraQEglW+OkovnCzsiszTmsrlY//qLFjCpQDFRvjdm2wA5pPm9w==
+
+"@babel/plugin-proposal-private-property-in-object@^7.21.11":
+  version "7.21.11"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-private-property-in-object/-/plugin-proposal-private-property-in-object-7.21.11.tgz#69d597086b6760c4126525cfa154f34631ff272c"
+  integrity sha512-0QZ8qP/3RLDVBwBFoWAwCtgcDZJVwA5LUJRZU8x2YFfKNuFq161wK3cuGrALu5yiPu+vzwTAg/sMWVNeWeNyaw==
+  dependencies:
+    "@babel/helper-annotate-as-pure" "^7.18.6"
+    "@babel/helper-create-class-features-plugin" "^7.21.0"
+    "@babel/helper-plugin-utils" "^7.20.2"
+    "@babel/plugin-syntax-private-property-in-object" "^7.14.5"
 
 "@babel/plugin-syntax-async-generators@^7.8.4":
   version "7.8.4"
@@ -1159,7 +1169,7 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.10.1", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.16.7", "@babel/runtime@^7.18.0", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.0", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.5", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.10.1", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.16.7", "@babel/runtime@^7.18.0", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.0", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.5", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.6", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.23.9"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.9.tgz#47791a15e4603bb5f905bc0753801cf21d6345f7"
   integrity sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==
@@ -2288,6 +2298,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-transition-group@^4.4.10":
+  version "4.4.10"
+  resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-4.4.10.tgz#6ee71127bdab1f18f11ad8fb3322c6da27c327ac"
+  integrity sha512-hT/+s0VQs2ojCX823m60m5f0sL5idt9SO6Tj6Dg+rdphGPIeJbJ6CxvBYkgkGKrYeDjvIpKTR38UzmtHJOGW3Q==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@^18.0.0":
   version "18.2.57"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.57.tgz#147b516d8bdb2900219acbfc6f939bdeecca7691"
@@ -2724,6 +2741,11 @@ ajv@^8.0.0, ajv@^8.6.0, ajv@^8.9.0:
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
+
+animate.css@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/animate.css/-/animate.css-4.1.1.tgz#614ec5a81131d7e4dc362a58143f7406abd68075"
+  integrity sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==
 
 ansi-escapes@^4.2.1, ansi-escapes@^4.3.1:
   version "4.3.2"
@@ -4124,6 +4146,14 @@ dom-converter@^0.2.0:
   integrity sha512-gd3ypIPfOMr9h5jIKq8E3sHOTCjeirnl0WK5ZdS1AW0Odt0b1PaWaHdJ4Qk4klv+YB9aJBS7mESXjFoDQPu6DA==
   dependencies:
     utila "~0.4"
+
+dom-helpers@^5.0.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/dom-helpers/-/dom-helpers-5.2.1.tgz#d9400536b2bf8225ad98fe052e029451ac40e902"
+  integrity sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==
+  dependencies:
+    "@babel/runtime" "^7.8.7"
+    csstype "^3.0.2"
 
 dom-serializer@0:
   version "0.2.2"
@@ -7998,7 +8028,7 @@ prompts@^2.0.1, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.8.1:
+prop-types@^15.6.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -8566,6 +8596,16 @@ react-scripts@5.0.1:
     workbox-webpack-plugin "^6.4.1"
   optionalDependencies:
     fsevents "^2.3.2"
+
+react-transition-group@^4.4.5:
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.5.tgz#e53d4e3f3344da8521489fbef8f2581d42becdd1"
+  integrity sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    dom-helpers "^5.0.1"
+    loose-envify "^1.4.0"
+    prop-types "^15.6.2"
 
 react@^18.2.0:
   version "18.2.0"
