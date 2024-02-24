@@ -65,7 +65,6 @@ function App() {
         })
     }
 
-
     const floorDataCol = [
         {
             title: 'Current',
@@ -111,9 +110,18 @@ function App() {
     }
 
     const callElevatorFromOutside = (is_up: number) => {
+        if (is_up && inputValue === 10) {
+            message.warning('You are on the highest floor!')
+            return false
+        }
+        if (!is_up && inputValue === -1) {
+            message.warning('You are on the lowest floor!')
+            return false
+        }
         callElevatorOutsideApi({current_floor: inputValue, is_up: is_up}).then((res) => {
             const data = res.data.data
             setFloorData(data.building_floor_data)
+            startElevatorFunc('no')
         })
     }
 
@@ -176,10 +184,10 @@ function App() {
             if (parseInt(value) === 0) {
                 message.error('No floor 0');
                 return false
-            } else if (parseInt(value) >= -1 && parseInt(value) <= 20) {
+            } else if (parseInt(value) >= -1 && parseInt(value) <= 10) {
                 setInputValue(parseInt(value))
             } else {
-                message.error('Input value should be less than 20 and larger than -1');
+                message.error('Input value should be less than 10 and larger than -1');
                 return false
             }
         }
@@ -188,18 +196,23 @@ function App() {
 
     let intervalHandle = useRef();
 
-    const startElevatorFunc = () => {
-        startElevatorApi({}).then(res => {
-            message.success(res.data.msg);
-            const data = res.data.data
-            setCurrentFloor(data.current_floor)
-            setIsUp(data.is_up)
-            setPeopleCount(data.persons)
-            setPersonData(data.person_data)
-            setFloorData(data.building_floor_data)
-            // @ts-ignore
-            intervalHandle.current = setInterval(getElevatorInfoFunc, 10000);
-        })
+    const startElevatorFunc = (generate_person='yes') => {
+        try {
+            startElevatorApi({generate_person: generate_person}).then(res => {
+                message.success(res.data.msg);
+                const data = res.data.data
+                setCurrentFloor(data.current_floor)
+                setIsUp(data.is_up)
+                setPeopleCount(data.persons)
+                setPersonData(data.person_data)
+                setFloorData(data.building_floor_data)
+                // @ts-ignore
+                intervalHandle.current = setInterval(getElevatorInfoFunc, 5000);
+            })
+        }catch (e) {
+            console.log(e)
+            message.error('startElevatorFunc failed')
+        }
     }
 
     const stopElevatorFunc = () => {
