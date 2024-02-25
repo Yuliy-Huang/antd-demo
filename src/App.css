@@ -1,7 +1,7 @@
 .App {
   min-height: 100vh;
   text-align: center;
-  background-color: #08979c;
+  background: linear-gradient(to right, #b5f5ec, #08979c);
   color: white;
   font-size: calc(10px + 2vmin);
 }
@@ -60,7 +60,7 @@
     .current-floor {
       display: inline-block;
       margin-left: 12px;
-      margin-right: 80px;
+      margin-right: 75px;
       width: 40px;
       color: #c4fa14;
     }

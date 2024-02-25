@@ -7,7 +7,7 @@ import {
     ArrowsAltOutlined,
     ShrinkOutlined,
     CaretRightOutlined,
-    PauseOutlined
+    PauseOutlined,
 } from '@ant-design/icons';
 import './App.css';
 import {Button, Col, Row, message, Input, Table} from 'antd';
@@ -34,6 +34,8 @@ function App() {
     const [doorOpenStatus, setDoorOpenStatus] = useState(0)
     const [doorCloseStatus, setDoorCloseStatus] = useState(0)
     const [show, setShow] = useState(true)
+    const [elevatorStart, setElevatorStart] = useState(0)
+
 
     const getElevatorInfoFunc = () => {
         setShow(false)
@@ -56,6 +58,7 @@ function App() {
 
                 if (data.person_data.length === 0 && data.building_floor_data.length === 0) {
                     clearInterval(intervalHandle.current);
+                    setElevatorStart(0)
                 }
              } else {
                 message.error('Elevator did`t start yet');
@@ -106,6 +109,9 @@ function App() {
             setPeopleCount(data.persons)
             setPersonData(data.person_data)
             setFloorData(data.building_floor_data)
+            if (!elevatorStart) {
+                startElevatorFunc('no')
+            }
         })
     }
 
@@ -121,7 +127,9 @@ function App() {
         callElevatorOutsideApi({current_floor: inputValue, is_up: is_up}).then((res) => {
             const data = res.data.data
             setFloorData(data.building_floor_data)
-            startElevatorFunc('no')
+            if (!elevatorStart) {
+                startElevatorFunc('no')
+            }
         })
     }
 
@@ -197,27 +205,33 @@ function App() {
     let intervalHandle = useRef();
 
     const startElevatorFunc = (generate_person='yes') => {
-        try {
-            startElevatorApi({generate_person: generate_person}).then(res => {
-                message.success(res.data.msg);
-                const data = res.data.data
-                setCurrentFloor(data.current_floor)
-                setIsUp(data.is_up)
-                setPeopleCount(data.persons)
-                setPersonData(data.person_data)
-                setFloorData(data.building_floor_data)
-                // @ts-ignore
-                intervalHandle.current = setInterval(getElevatorInfoFunc, 5000);
-            })
-        }catch (e) {
-            console.log(e)
-            message.error('startElevatorFunc failed')
+        if (!elevatorStart) {
+            try {
+                startElevatorApi({generate_person: generate_person}).then(res => {
+                    message.success(res.data.msg);
+                    const data = res.data.data
+                    setElevatorStart(1)
+                    setCurrentFloor(data.current_floor)
+                    setIsUp(data.is_up)
+                    setPeopleCount(data.persons)
+                    setPersonData(data.person_data)
+                    setFloorData(data.building_floor_data)
+                    // @ts-ignore
+                    intervalHandle.current = setInterval(getElevatorInfoFunc, 5000);
+                })
+            }catch (e) {
+                console.log(e)
+                message.error('startElevatorFunc failed')
+            }
+        } else {
+            message.warning('Elevator is already started!');
         }
     }
 
     const stopElevatorFunc = () => {
         stopElevatorApi({}).then(res => {
             message.success(res.data.msg);
+            setElevatorStart(0)
             const data = res.data.data
             setCurrentFloor(data.current_floor)
             setIsUp(data.is_up)
@@ -251,12 +265,12 @@ function App() {
                         <div className="one-button" style={{marginBottom: '50px'}}>
                             <Button onClick={() => startElevatorFunc()} className='up-button'
                                     style={{
-                                        backgroundColor: '#ff7875',
+                                        backgroundColor: '#fffb8f',
                                         marginTop: '8px',
                                         marginRight: '30px'
                                     }}><CaretRightOutlined/></Button>
                             <Button onClick={() => stopElevatorFunc()} className='up-button'
-                                    style={{backgroundColor: '#ff7875', marginTop: '8px'}}><PauseOutlined/></Button>
+                                    style={{backgroundColor: elevatorStart ? '#fffb8f' : '#ff7875', marginTop: '8px'}}><PauseOutlined/></Button>
                         </div>
                         <div className="one-button">
                             <Input size="large" value={inputValue} onChange={(e) => handleChange(e.target.value)}
