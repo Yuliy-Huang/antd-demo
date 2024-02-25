@@ -217,7 +217,7 @@ function App() {
                     setPersonData(data.person_data)
                     setFloorData(data.building_floor_data)
                     // @ts-ignore
-                    intervalHandle.current = setInterval(getElevatorInfoFunc, 5000);
+                    intervalHandle.current = setInterval(getElevatorInfoFunc, 3000);
                 })
             }catch (e) {
                 console.log(e)
