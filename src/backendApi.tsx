@@ -19,6 +19,14 @@ export function startElevatorApi(params: any) {
 
 export function stopElevatorApi(params: any) {
     return request({
+        url: "/elevator_stop",
+        method: "get",
+        params: params,
+    });
+}
+
+export function pauseElevatorApi(params: any) {
+    return request({
         url: "/elevator_pause",
         method: "get",
         params: params,

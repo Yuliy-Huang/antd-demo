@@ -8,6 +8,7 @@ import {
     ShrinkOutlined,
     CaretRightOutlined,
     PauseOutlined,
+    StopOutlined
 } from '@ant-design/icons';
 import './App.css';
 import {Button, Col, Row, message, Input, Table} from 'antd';
@@ -19,7 +20,7 @@ import {
     closeDoorApi,
     startElevatorApi,
     stopElevatorApi,
-    callElevatorInsideApi, callElevatorOutsideApi
+    callElevatorInsideApi, callElevatorOutsideApi, pauseElevatorApi
 } from './backendApi'
 
 
@@ -27,6 +28,8 @@ function App() {
     const [pushedButtons, setPushedButtons] = useState<number[]>([])
     const [inputValue, setInputValue] = useState(1)
     const [floorData, setFloorData] = useState<any[]>([])
+    const [floorDataCurrent, setFloorDataCurrent] = useState<any[]>([])
+    const [floorDataIsUp, setFloorDataCurrentIsUp] = useState<any[]>([])
     const [currentFloor, setCurrentFloor] = useState(1)
     const [isUp, setIsUp] = useState(1)
     const [peopleCount, setPeopleCount] = useState(0)
@@ -36,6 +39,15 @@ function App() {
     const [show, setShow] = useState(true)
     const [elevatorStart, setElevatorStart] = useState(0)
 
+    const prevPeopleLength = useRef(0);
+    useEffect(() => {
+        const idx = floorDataCurrent.indexOf(currentFloor)
+        if ((prevPeopleLength.current > personData.length || idx!== -1 && floorDataIsUp[idx] === isUp)) {
+            console.log('useEffectuseEffectuseEffect : ', currentFloor)
+            openDoorFunc();
+            prevPeopleLength.current = personData.length;
+        }
+    }, [currentFloor, personData.length]);
 
     const getElevatorInfoFunc = () => {
         setShow(false)
@@ -47,6 +59,14 @@ function App() {
                 setPeopleCount(data.persons)
                 setPersonData(data.person_data)
                 setFloorData(data.building_floor_data)
+                let newArray1:any = []
+                let newArray2:any = []
+                data.building_floor_data.forEach((item: any) => {
+                    newArray1.push(item.current_floor)
+                    newArray2.push(item.is_up)
+                })
+                setFloorDataCurrent(newArray1)
+                setFloorDataCurrentIsUp(newArray2)
 
                 let newArray:any = []
                 data.person_data.forEach((item: any) => {
@@ -109,6 +129,14 @@ function App() {
             setPeopleCount(data.persons)
             setPersonData(data.person_data)
             setFloorData(data.building_floor_data)
+            let newArray1:any = []
+            let newArray2:any = []
+            data.building_floor_data.forEach((item: any) => {
+                newArray1.push(item.current_floor)
+                newArray2.push(item.is_up)
+            })
+            setFloorDataCurrent(newArray1)
+            setFloorDataCurrentIsUp(newArray2)
             if (!elevatorStart) {
                 startElevatorFunc('no')
             }
@@ -127,6 +155,14 @@ function App() {
         callElevatorOutsideApi({current_floor: inputValue, is_up: is_up}).then((res) => {
             const data = res.data.data
             setFloorData(data.building_floor_data)
+            let newArray1:any = []
+            let newArray2:any = []
+            data.building_floor_data.forEach((item: any) => {
+                newArray1.push(item.current_floor)
+                newArray2.push(item.is_up)
+            })
+            setFloorDataCurrent(newArray1)
+            setFloorDataCurrentIsUp(newArray2)
             if (!elevatorStart) {
                 startElevatorFunc('no')
             }
@@ -142,22 +178,22 @@ function App() {
         setPushedButtons(newArray)
     }
 
-    const openDoor = () => {
+    const openDoorFunc = () => {
         setDoorOpenStatus(1)
         message.warning('Door is opening, currentFloor : ' + currentFloor.toString());
-        openDoorApi({}).then(() => {
+        openDoorApi({}).then((res) => {
             deleteButtonFromPushed(currentFloor)
-            message.success('Door is opened');
             setDoorOpenStatus(0)
+            closeDoorFunc()
         })
     }
 
-    const closeDoor = () => {
+    const closeDoorFunc = () => {
         setDoorCloseStatus(1)
         message.warning('Door is closing');
-        closeDoorApi({}).then(() => {
-            message.success('Door is closed');
+        closeDoorApi({}).then((res) => {
             setDoorCloseStatus(0)
+            // startElevatorFunc('no')
         })
     }
 
@@ -216,6 +252,14 @@ function App() {
                     setPeopleCount(data.persons)
                     setPersonData(data.person_data)
                     setFloorData(data.building_floor_data)
+                    let newArray1:any = []
+                    let newArray2:any = []
+                    data.building_floor_data.forEach((item: any) => {
+                        newArray1.push(item.current_floor)
+                        newArray2.push(item.is_up)
+                    })
+                    setFloorDataCurrent(newArray1)
+                    setFloorDataCurrentIsUp(newArray2)
                     // @ts-ignore
                     intervalHandle.current = setInterval(getElevatorInfoFunc, 3000);
                 })
@@ -238,9 +282,24 @@ function App() {
             setPeopleCount(data.persons)
             setPersonData(data.person_data)
             setFloorData(data.building_floor_data)
+            let newArray1:any = []
+            let newArray2:any = []
+            data.building_floor_data.forEach((item: any) => {
+                newArray1.push(item.current_floor)
+                newArray2.push(item.is_up)
+            })
+            setFloorDataCurrent(newArray1)
+            setFloorDataCurrentIsUp(newArray2)
             setPushedButtons([])
         })
         clearInterval(intervalHandle.current);
+    }
+
+    const pauseElevatorFunc = () => {
+        pauseElevatorApi({}).then(res => {
+            message.success(res.data.msg);
+            setElevatorStart(0)
+        })
     }
 
     useEffect(() => {
@@ -267,10 +326,12 @@ function App() {
                                     style={{
                                         backgroundColor: '#fffb8f',
                                         marginTop: '8px',
-                                        marginRight: '30px'
+                                        marginRight: '20px'
                                     }}><CaretRightOutlined/></Button>
+                            <Button onClick={() => pauseElevatorFunc()} className='up-button'
+                                    style={{backgroundColor: elevatorStart ? '#fffb8f' : '#ff7875', marginTop: '8px', marginRight: '20px'}}><PauseOutlined/></Button>
                             <Button onClick={() => stopElevatorFunc()} className='up-button'
-                                    style={{backgroundColor: elevatorStart ? '#fffb8f' : '#ff7875', marginTop: '8px'}}><PauseOutlined/></Button>
+                                    style={{backgroundColor: '#ff7875', marginTop: '8px'}}><StopOutlined /></Button>
                         </div>
                         <div className="one-button">
                             <Input size="large" value={inputValue} onChange={(e) => handleChange(e.target.value)}
@@ -312,11 +373,11 @@ function App() {
                         </div>
                         {buttons}
                         <div>
-                            <Button onClick={() => openDoor()}
+                            <Button onClick={() => openDoorFunc()}
                                     className={doorOpenStatus === 1 ? 'left-button-hover' : 'left-button'}
                                     style={{backgroundColor: '#fffb8f', marginTop: '8px'}}><ArrowsAltOutlined
                                 className="rotate"/></Button>
-                            <Button onClick={() => closeDoor()}
+                            <Button onClick={() => closeDoorFunc()}
                                     className={doorCloseStatus === 1 ? 'right-button-hover' : 'right-button'}
                                     style={{backgroundColor: '#fffb8f', marginTop: '8px'}}><ShrinkOutlined
                                 className="rotate"/></Button>
