@@ -31,7 +31,7 @@ function App() {
     const [floorData, setFloorData] = useState<any[]>([])
     const [floorDataCurrent, setFloorDataCurrent] = useState<any[]>([])
     const [floorDataIsUp, setFloorDataIsUp] = useState<any[]>([])
-    const [currentFloor, setCurrentFloor] = useState(1)
+    const [currentFloor, setCurrentFloor] = useState(0)
     const [isUp, setIsUp] = useState(1)
     const [peopleCount, setPeopleCount] = useState(0)
     const [personData, setPersonData] = useState<any[]>([])
@@ -313,7 +313,7 @@ function App() {
                     setPersonDataIsUp(newArray4)
 
                     // @ts-ignore
-                    intervalHandle.current = setInterval(getElevatorInfoFunc, 3000);
+                    intervalHandle.current = setInterval(getElevatorInfoFunc, 5000);
                 })
             } catch (e) {
                 console.log(e)
@@ -454,7 +454,7 @@ function App() {
                                     timeout={1000}
                                     unmountOnExit
                                     appear>
-                                    <span>{currentFloor}</span>
+                                    <span>{currentFloor === 0 ? '||' : currentFloor}</span>
                                 </CSSTransition>
                             </div>
                             <div style={{display: "inline-block"}}>{arrow}</div>
