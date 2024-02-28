@@ -8,10 +8,11 @@ import {
     ShrinkOutlined,
     CaretRightOutlined,
     PauseOutlined,
-    StopOutlined
+    StopOutlined,
+    PlayCircleOutlined
 } from '@ant-design/icons';
 import './App.css';
-import {Button, Col, Row, message, Input, Table} from 'antd';
+import {Button, Col, Row, message, Input, Table, Tooltip} from 'antd';
 import {CSSTransition} from 'react-transition-group'
 import 'animate.css'
 import {
@@ -29,25 +30,33 @@ function App() {
     const [inputValue, setInputValue] = useState(1)
     const [floorData, setFloorData] = useState<any[]>([])
     const [floorDataCurrent, setFloorDataCurrent] = useState<any[]>([])
-    const [floorDataIsUp, setFloorDataCurrentIsUp] = useState<any[]>([])
+    const [floorDataIsUp, setFloorDataIsUp] = useState<any[]>([])
     const [currentFloor, setCurrentFloor] = useState(1)
     const [isUp, setIsUp] = useState(1)
     const [peopleCount, setPeopleCount] = useState(0)
     const [personData, setPersonData] = useState<any[]>([])
+    const [personDataTarget, setPersonDataTarget] = useState<any[]>([])
+    const [personDataIsUp, setPersonDataIsUp] = useState<any[]>([])
     const [doorOpenStatus, setDoorOpenStatus] = useState(0)
     const [doorCloseStatus, setDoorCloseStatus] = useState(0)
     const [show, setShow] = useState(true)
     const [elevatorStart, setElevatorStart] = useState(0)
 
-    const prevPeopleLength = useRef(0);
     useEffect(() => {
-        const idx = floorDataCurrent.indexOf(currentFloor)
-        if ((prevPeopleLength.current > personData.length || idx!== -1 && floorDataIsUp[idx] === isUp)) {
-            console.log('useEffectuseEffectuseEffect : ', currentFloor)
+        const floor_idx = floorDataCurrent.indexOf(currentFloor)
+        // console.log('useEffect --- floorDataIsUp[floor_idx] === isUp : ', floorDataIsUp[floor_idx] === isUp)
+        if (floor_idx !== -1 && floorDataIsUp[floor_idx] === isUp) {
+            console.log('进入电梯 : ', currentFloor)
             openDoorFunc();
-            prevPeopleLength.current = personData.length;
         }
-    }, [currentFloor, personData.length]);
+
+        const people_idx = personDataTarget.indexOf(currentFloor)
+        // console.log('useEffect --- personDataIsUp[people_idx] === isUp : ', personDataIsUp[people_idx] === isUp)
+        if (people_idx !== -1 && personDataIsUp[people_idx] === isUp) {
+            console.log('出电梯 : ', currentFloor)
+            openDoorFunc();
+        }
+    }, [currentFloor, isUp]);
 
     const getElevatorInfoFunc = () => {
         setShow(false)
@@ -59,16 +68,26 @@ function App() {
                 setPeopleCount(data.persons)
                 setPersonData(data.person_data)
                 setFloorData(data.building_floor_data)
-                let newArray1:any = []
-                let newArray2:any = []
+
+                let newArray1: any = []
+                let newArray2: any = []
                 data.building_floor_data.forEach((item: any) => {
                     newArray1.push(item.current_floor)
                     newArray2.push(item.is_up)
                 })
                 setFloorDataCurrent(newArray1)
-                setFloorDataCurrentIsUp(newArray2)
+                setFloorDataIsUp(newArray2)
 
-                let newArray:any = []
+                let newArray3: any = []
+                let newArray4: any = []
+                data.person_data.forEach((item: any) => {
+                    newArray3.push(item.target_floor)
+                    newArray4.push(item.is_up)
+                })
+                setPersonDataTarget(newArray3)
+                setPersonDataIsUp(newArray4)
+
+                let newArray: any = []
                 data.person_data.forEach((item: any) => {
                     if (pushedButtons.indexOf(item.target_floor) === -1) {
                         newArray.push(item.target_floor)
@@ -80,7 +99,7 @@ function App() {
                     clearInterval(intervalHandle.current);
                     setElevatorStart(0)
                 }
-             } else {
+            } else {
                 message.error('Elevator did`t start yet');
             }
         }).finally(() => {
@@ -129,14 +148,25 @@ function App() {
             setPeopleCount(data.persons)
             setPersonData(data.person_data)
             setFloorData(data.building_floor_data)
-            let newArray1:any = []
-            let newArray2:any = []
+
+            let newArray1: any = []
+            let newArray2: any = []
             data.building_floor_data.forEach((item: any) => {
                 newArray1.push(item.current_floor)
                 newArray2.push(item.is_up)
             })
             setFloorDataCurrent(newArray1)
-            setFloorDataCurrentIsUp(newArray2)
+            setFloorDataIsUp(newArray2)
+
+            let newArray3: any = []
+            let newArray4: any = []
+            data.person_data.forEach((item: any) => {
+                newArray3.push(item.target_floor)
+                newArray4.push(item.is_up)
+            })
+            setPersonDataTarget(newArray3)
+            setPersonDataIsUp(newArray4)
+
             if (!elevatorStart) {
                 startElevatorFunc('no')
             }
@@ -155,14 +185,25 @@ function App() {
         callElevatorOutsideApi({current_floor: inputValue, is_up: is_up}).then((res) => {
             const data = res.data.data
             setFloorData(data.building_floor_data)
-            let newArray1:any = []
-            let newArray2:any = []
+
+            let newArray1: any = []
+            let newArray2: any = []
             data.building_floor_data.forEach((item: any) => {
                 newArray1.push(item.current_floor)
                 newArray2.push(item.is_up)
             })
             setFloorDataCurrent(newArray1)
-            setFloorDataCurrentIsUp(newArray2)
+            setFloorDataIsUp(newArray2)
+
+            let newArray3: any = []
+            let newArray4: any = []
+            data.person_data.forEach((item: any) => {
+                newArray3.push(item.target_floor)
+                newArray4.push(item.is_up)
+            })
+            setPersonDataTarget(newArray3)
+            setPersonDataIsUp(newArray4)
+
             if (!elevatorStart) {
                 startElevatorFunc('no')
             }
@@ -180,9 +221,9 @@ function App() {
 
     const openDoorFunc = () => {
         setDoorOpenStatus(1)
-        message.warning('Door is opening, currentFloor : ' + currentFloor.toString());
+        // message.warning('Door is opening, currentFloor : ' + currentFloor.toString());
         openDoorApi({}).then((res) => {
-            deleteButtonFromPushed(currentFloor)
+            // deleteButtonFromPushed(currentFloor)
             setDoorOpenStatus(0)
             closeDoorFunc()
         })
@@ -190,7 +231,7 @@ function App() {
 
     const closeDoorFunc = () => {
         setDoorCloseStatus(1)
-        message.warning('Door is closing');
+        // message.warning('Door is closing');
         closeDoorApi({}).then((res) => {
             setDoorCloseStatus(0)
             // startElevatorFunc('no')
@@ -240,7 +281,7 @@ function App() {
 
     let intervalHandle = useRef();
 
-    const startElevatorFunc = (generate_person='yes') => {
+    const startElevatorFunc = (generate_person = 'yes') => {
         if (!elevatorStart) {
             try {
                 startElevatorApi({generate_person: generate_person}).then(res => {
@@ -252,18 +293,29 @@ function App() {
                     setPeopleCount(data.persons)
                     setPersonData(data.person_data)
                     setFloorData(data.building_floor_data)
-                    let newArray1:any = []
-                    let newArray2:any = []
+
+                    let newArray1: any = []
+                    let newArray2: any = []
                     data.building_floor_data.forEach((item: any) => {
                         newArray1.push(item.current_floor)
                         newArray2.push(item.is_up)
                     })
                     setFloorDataCurrent(newArray1)
-                    setFloorDataCurrentIsUp(newArray2)
+                    setFloorDataIsUp(newArray2)
+
+                    let newArray3: any = []
+                    let newArray4: any = []
+                    data.person_data.forEach((item: any) => {
+                        newArray3.push(item.target_floor)
+                        newArray4.push(item.is_up)
+                    })
+                    setPersonDataTarget(newArray3)
+                    setPersonDataIsUp(newArray4)
+
                     // @ts-ignore
                     intervalHandle.current = setInterval(getElevatorInfoFunc, 3000);
                 })
-            }catch (e) {
+            } catch (e) {
                 console.log(e)
                 message.error('startElevatorFunc failed')
             }
@@ -282,14 +334,25 @@ function App() {
             setPeopleCount(data.persons)
             setPersonData(data.person_data)
             setFloorData(data.building_floor_data)
-            let newArray1:any = []
-            let newArray2:any = []
+
+            let newArray1: any = []
+            let newArray2: any = []
             data.building_floor_data.forEach((item: any) => {
                 newArray1.push(item.current_floor)
                 newArray2.push(item.is_up)
             })
             setFloorDataCurrent(newArray1)
-            setFloorDataCurrentIsUp(newArray2)
+            setFloorDataIsUp(newArray2)
+
+            let newArray3: any = []
+            let newArray4: any = []
+            data.person_data.forEach((item: any) => {
+                newArray3.push(item.target_floor)
+                newArray4.push(item.is_up)
+            })
+            setPersonDataTarget(newArray3)
+            setPersonDataIsUp(newArray4)
+
             setPushedButtons([])
         })
         clearInterval(intervalHandle.current);
@@ -309,10 +372,10 @@ function App() {
     }, [])
 
     const floorColor = (record: any) => {
-        return record.current_floor === currentFloor && record.is_up === isUp? 'special-row' : ''
+        return record.current_floor === currentFloor && record.is_up === isUp ? 'special-row' : ''
     }
     const personColor = (record: any) => {
-        return record.target_floor === currentFloor? 'special-row' : ''
+        return record.target_floor === currentFloor ? 'special-row' : ''
     }
 
     return (
@@ -322,16 +385,38 @@ function App() {
                     <div className="outside-elevator">
                         <div>*Outside the elevator*</div>
                         <div className="one-button" style={{marginBottom: '50px'}}>
-                            <Button onClick={() => startElevatorFunc()} className='up-button'
-                                    style={{
-                                        backgroundColor: '#fffb8f',
-                                        marginTop: '8px',
-                                        marginRight: '20px'
-                                    }}><CaretRightOutlined/></Button>
-                            <Button onClick={() => pauseElevatorFunc()} className='up-button'
-                                    style={{backgroundColor: elevatorStart ? '#fffb8f' : '#ff7875', marginTop: '8px', marginRight: '20px'}}><PauseOutlined/></Button>
-                            <Button onClick={() => stopElevatorFunc()} className='up-button'
-                                    style={{backgroundColor: '#ff7875', marginTop: '8px'}}><StopOutlined /></Button>
+                            <Tooltip title="Start the elevator and generate random people." color='cyan' key='cyan1' placement="bottom">
+                                <Button onClick={() => startElevatorFunc()} className='up-button'
+                                        style={{
+                                            backgroundColor: '#fffb8f',
+                                            marginTop: '8px',
+                                            marginRight: '10px'
+                                        }}><PlayCircleOutlined/></Button>
+                            </Tooltip>
+                            <Tooltip title="Stop and reset the elevator." color='cyan' key='cyan2' placement="bottom">
+                                <Button onClick={() => stopElevatorFunc()} className='up-button'
+                                        style={{
+                                            backgroundColor: '#ff7875',
+                                            marginTop: '8px',
+                                            marginRight: '10px'
+                                        }}><StopOutlined/></Button>
+                            </Tooltip>
+
+                            <Tooltip title="Restart" color='cyan' key='cyan3' placement="bottom">
+                                <Button onClick={() => startElevatorFunc('no')} className='up-button'
+                                        style={{
+                                            backgroundColor: '#fffb8f',
+                                            marginTop: '8px',
+                                            marginRight: '10px'
+                                        }}><CaretRightOutlined/></Button>
+                            </Tooltip>
+                            <Tooltip title="Pause" color='cyan' key='cyan4' placement="bottom">
+                                <Button onClick={() => pauseElevatorFunc()} className='up-button'
+                                        style={{
+                                            backgroundColor: elevatorStart ? '#fffb8f' : '#ff7875',
+                                            marginTop: '8px'
+                                        }}><PauseOutlined/></Button>
+                            </Tooltip>
                         </div>
                         <div className="one-button">
                             <Input size="large" value={inputValue} onChange={(e) => handleChange(e.target.value)}
@@ -351,8 +436,11 @@ function App() {
                 <Col span={6} offset={1} className="flow-col">
                     <div className="outside-elevator">
                         <div style={{marginBottom: '20px'}}>*Floor Data*</div>
-                        <div>
-                            <Table dataSource={floorData} columns={floorDataCol} rowClassName={floorColor}/>
+                        <div className="one-line">
+                            <span>People Outside :&nbsp;&nbsp;{floorData.length}</span>
+                        </div>
+                        <div style={{marginTop: '30px'}}>
+                            <Table dataSource={floorData} columns={floorDataCol} rowClassName={floorColor} rowKey={"weight"}/>
                         </div>
                     </div>
                 </Col>
@@ -374,12 +462,12 @@ function App() {
                         {buttons}
                         <div>
                             <Button onClick={() => openDoorFunc()}
-                                    className={doorOpenStatus === 1 ? 'left-button-hover' : 'left-button'}
-                                    style={{backgroundColor: '#fffb8f', marginTop: '8px'}}><ArrowsAltOutlined
+                                    className={doorOpenStatus === 1 ? 'open-button-hover' : 'left-button'}
+                                    style={{marginTop: '16px'}}><ArrowsAltOutlined
                                 className="rotate"/></Button>
                             <Button onClick={() => closeDoorFunc()}
-                                    className={doorCloseStatus === 1 ? 'right-button-hover' : 'right-button'}
-                                    style={{backgroundColor: '#fffb8f', marginTop: '8px'}}><ShrinkOutlined
+                                    className={doorCloseStatus === 1 ? 'close-button-hover' : 'right-button'}
+                                    style={{marginTop: '16px'}}><ShrinkOutlined
                                 className="rotate"/></Button>
                         </div>
                     </div>
@@ -391,7 +479,7 @@ function App() {
                             <span>People Inside :&nbsp;&nbsp;{peopleCount}</span>
                         </div>
                         <div style={{marginTop: '30px'}}>
-                            <Table dataSource={personData} columns={floorDataCol} rowClassName={personColor}/>
+                            <Table dataSource={personData} columns={floorDataCol} rowClassName={personColor} rowKey={"weight"}/>
                         </div>
                     </div>
                 </Col>

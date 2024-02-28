@@ -53,7 +53,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 30px;
+    margin-top: 80px;
     margin-bottom: 20px;
     font-size: x-large;
 
@@ -111,7 +111,25 @@
     background-color: #5b8c00 !important;
     border: none;
   }
+  .open-button-hover {
+    margin-bottom: 6px;
+    float: left;
+    width: 50px;
+    height: 40px;
+    background-color: #fffb8f !important;
+    border: none;
+  }
+  .close-button-hover {
+    margin-bottom: 6px;
+    width: 50px;
+    height: 40px;
+    background-color: #fffb8f !important;
+    border: none;
+  }
 }
+
+
+
 
 .special-row {
   background-color: #7fb9af;
